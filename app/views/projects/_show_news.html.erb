@@ -1,0 +1,13 @@
+<% @news = News.where(project_id: @project.self_and_ancestors.map(&:id)).limit(5).includes(:author, :project).reorder("#{News.table_name}.created_on DESC").to_a %>
+<% if @news.any? && authorize_for('news', 'index') %>
+    <div class="news_parent box">
+      <h3 class="icon icon-news"><%=l(:label_news_latest)%></h3>
+      <%= render :partial => 'news/news', :collection => @news %>
+      <p><%= link_to l(:label_news_view_all), project_news_index_path(@project) %></p>
+    </div>
+    <script>
+      $(function(){
+        $('.news').hide()
+      })
+    </script>
+<% end %>
